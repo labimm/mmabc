@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MM_ABC</title>
+    <link href="/static/handsontable.full.min.css" rel="stylesheet" media="screen">
+    <script src="/static/handsontable.full.min.js"></script>
+</head>
+
+<body>
+    <div>
+
+        <h3>Experimental details</h3>
+
+        <label for="E_0">E_0</label>
+        <input name="E_0" type="number" value="0.0"/>
+
+        <label for="S_0">S_0</label>
+        <input name="S_0" type="number" value="0.0"/>
+
+        <label for="h">h</label>
+        <input name="h" type="number" value="0.0"/>
+
+        <label for="exp_last">exp_last</label>
+        <input name="exp_last" type="number" value="0.0"/>
+
+
+        <h3>ABC details</h3>
+
+        <label for="low_K_M">low_K_M</label>
+        <input name="low_K_M" type="number" value="0"/>
+
+        <label for="high_K_M">high_K_M</label>
+        <input name="high_K_M" type="number" value="0"/>
+
+        <label for="low_k_cat">low_k_cat</label>
+        <input name="low_k_cat" type="number" value="0"/>
+
+        <label for="high_k_cat">high_k_cat</label>
+        <input name="high_k_cat" type="number" value="0"/>
+
+        <label for="N">N</label>
+        <input name="N" type="number" value="0"/>
+
+        <label for="No_sim">No_sim</label>
+        <input name="No_sim" type="number" value="0"/>
+
+        <label for="points_prior">points_prior</label>
+        <input name="points_prior" type=number value="0"/>
+
+        <label for="data">Data</label>
+        <textarea name="data" rows=16 cols="8"></textarea>
+        <button onclick="submitForm()">
+            Compute!
+        </button>
+    </div>
+    <hr/>
+    <div>
+        <input id="returncode" disabled/>
+        <pre id="output">
+        </pre>
+    </div>
+</body>
+<script>
+    'use strict';
+
+    async function postData(url, data) {
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        return resp.json();
+    }
+
+    async function submitForm() {
+        const resp = await postData('/mm_abc', {
+            data: document.querySelector("textarea[name='data']").value.split(/s+/),
+
+            E_0: document.querySelector("input[name='E_0']").value,
+            S_0: document.querySelector("input[name='S_0']").value,
+            h: document.querySelector("input[name='h']").value,
+            exp_last: document.querySelector("input[name='exp_last']").value,
+
+            low_K_M: document.querySelector("input[name='low_K_M']").value,
+            high_K_M: document.querySelector("input[name='high_K_M']").value,
+            low_k_cat: document.querySelector("input[name='low_k_cat']").value,
+            high_k_cat: document.querySelector("input[name='high_k_cat']").value,
+
+            N: document.querySelector("input[name='N']").value,
+            No_sim: document.querySelector("input[name='No_sim']").value,
+            points_prior: document.querySelector("input[name='points_prior']").value,
+        });
+        console.log(resp);
+        const output = document.querySelector("#output");
+        output.innerHTML = resp.output;
+
+        const returncode = document.querySelector("#returncode");
+        returncode.value = resp.returncode;
+    }
+
+</script>
+</html>

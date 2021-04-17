@@ -63,7 +63,7 @@ def load_data(args, row_value=0):
     file_name = args['file']
 
     # LOAD DATA
-    with open(file_name, 'rb') as csvfile:
+    with open(file_name, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         counter = 0
         v = []
